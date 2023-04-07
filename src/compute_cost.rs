@@ -1,3 +1,4 @@
+/// Compute the cost of a linear regression model
 pub fn compute_cost(x: Vec<f64>, y: Vec<f64>, w: f64, b: f64) -> f64 {
   // This is the number of training examples
   let m = x.len();
