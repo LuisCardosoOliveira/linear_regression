@@ -1,6 +1,5 @@
-mod compute_cost;
-mod compute_gradient;
+use linear_regression::LinearRegression;
 
 fn main() {
-  println!("Hello, world!");
+  let _lr = LinearRegression::new(0.0, 0.0);
 }

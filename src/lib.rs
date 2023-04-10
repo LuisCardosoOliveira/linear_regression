@@ -1,23 +1,31 @@
-/// Compute the cost of a linear regression model
-pub fn compute_cost(x: Vec<f64>, y: Vec<f64>, w: f64, b: f64) -> f64 {
-  // This is the number of training examples
-  let m = x.len();
+pub struct LinearRegression {
+  pub w: f64,
+  pub b: f64,
+}
 
-  // The total cost
-  let total_cost;
-
-  let mut cost_sum = 0.0;
-
-  for i in 0..m {
-    let f_wb = w * x[i] + b;
-    let cost = (f_wb - y[i]).powi(2);
-    // Add to sum of cost for each example
-    cost_sum += cost;
+impl LinearRegression {
+  pub fn new(w: f64, b: f64) -> LinearRegression {
+    LinearRegression { w, b }
   }
 
-  total_cost = (1.0 / (2.0 * m as f64)) * cost_sum;
+  /// Compute the cost of a linear regression model
+  pub fn compute_cost(&self, x: Vec<f64>, y: Vec<f64>) -> f64 {
+    // This is the number of training examples
+    let m = x.len();
 
-  total_cost
+    let mut cost_sum = 0.0;
+
+    for i in 0..m {
+      let f_wb = self.w * x[i] + self.b;
+      let cost = (f_wb - y[i]).powi(2);
+      // Add to sum of cost for each example
+      cost_sum += cost;
+    }
+
+    let total_cost = (1.0 / (2.0 * m as f64)) * cost_sum;
+
+    total_cost
+  }
 }
 
 #[cfg(test)]
@@ -25,15 +33,24 @@ mod tests {
   use super::*;
 
   #[test]
-  fn test_compute_cost() {
-    let x = vec![1.0, 2.0, 3.0, 4.0];
-    let y = vec![2.0, 4.0, 6.0, 8.0];
+  fn simple_test_compute_cost() {
     let w = 2.0;
     let b = 1.0;
+    let lr = LinearRegression::new(w, b);
+
+    let x = vec![1.0, 2.0, 3.0, 4.0];
+    let y = vec![2.0, 4.0, 6.0, 8.0];
 
     let expected_cost = 0.5;
-    let actual_cost = compute_cost(x, y, w, b);
+    let actual_cost = lr.compute_cost(x, y);
     assert_eq!(expected_cost, actual_cost);
+  }
+
+  #[test]
+  fn complex_test_compute_cost() {
+    let w = 2.0;
+    let b = 1.0;
+    let lr = LinearRegression::new(w, b);
 
     let x = vec![
       6.1101, 5.5277, 8.5186, 7.0032, 5.8598, 8.3829, 7.4764, 8.5781, 6.4862,
@@ -61,11 +78,9 @@ mod tests {
       0.47953, 0.20421, 0.67861, 7.5435, 5.3436, 4.2415, 6.7981, 0.92695,
       0.152, 2.8214, 1.8451, 4.2959, 7.2029, 1.9869, 0.14454, 9.0551, 0.61705,
     ];
-    let w = 2.0;
-    let b = 1.0;
 
     let expected_cost = 75.20338497891959;
-    let actual_cost = compute_cost(x, y, w, b);
+    let actual_cost = lr.compute_cost(x, y);
     assert_eq!(expected_cost, actual_cost);
   }
 }
